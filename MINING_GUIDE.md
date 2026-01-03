@@ -53,6 +53,30 @@ TETSUO is a SHA-256 based blockchain forked from Bitcoin, optimized for fast blo
 - **ckpool**: Stratum server that translates pool protocol to RPC calls
 - **TETSUO Node**: Full blockchain node that validates and submits blocks
 
+### What You'll Need to Download
+
+| Component | Repository | Purpose |
+|-----------|------------|---------|
+| **TETSUO Node** | [github.com/Pavelevich/tetsuonode](https://github.com/Pavelevich/tetsuonode) | Node with install scripts |
+| **TETSUO Core** (fallback) | [github.com/Pavelevich/fullchain](https://github.com/Pavelevich/fullchain) | Source code if scripts fail |
+| **ckpool** | [bitbucket.org/ckolivas/ckpool](https://bitbucket.org/ckolivas/ckpool) | Stratum mining server |
+| **GPU Miner** (optional) | [github.com/7etsuo/tetsuo-gpu-miner](https://github.com/7etsuo/tetsuo-gpu-miner) | CUDA miner for NVIDIA GPUs |
+
+**After installation, you'll have:**
+
+| Binary | Location | Purpose |
+|--------|----------|---------|
+| `tetsuod` | `~/tetsuo-fullchain/tetsuo-core/build/bin/` | Node daemon |
+| `tetsuo-cli` | `~/tetsuo-fullchain/tetsuo-core/build/bin/` | Wallet & RPC commands |
+| `ckpool` | `~/ckpool/src/` | Stratum server |
+
+**Configuration files:**
+
+| File | Purpose |
+|------|---------|
+| `~/.tetsuo/tetsuo.conf` | Node settings (RPC, ports) |
+| `~/ckpool/tetsuo.conf` | Pool settings (wallet, difficulty) |
+
 ---
 
 ## 2. Requirements
@@ -83,8 +107,37 @@ You need ONE of the following:
 
 ## 3. Installing TETSUO Node
 
-### 3.1 Install Dependencies
+Choose one of two methods:
 
+### Method 1: Automatic Installation (Recommended)
+
+Use the official install script from [tetsuonode](https://github.com/Pavelevich/tetsuonode):
+
+```bash
+# One-command install
+curl -fsSL https://raw.githubusercontent.com/Pavelevich/tetsuonode/main/scripts/install-linux.sh | bash
+```
+
+The script will:
+- Install all dependencies
+- Clone and build TETSUO Core
+- Set up the data directory
+
+**After completion, verify:**
+```bash
+ls ~/tetsuo-fullchain/tetsuo-core/build/bin/
+# Should show: tetsuod, tetsuo-cli
+```
+
+> **Known Issue:** Some users report that `tetsuo-core` directory is missing after running the script. If you don't see the binaries above, use Method 2.
+
+---
+
+### Method 2: Manual Installation (Fallback)
+
+If the automatic script didn't work, install manually:
+
+**Step 1: Install dependencies**
 ```bash
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y build-essential cmake pkgconf python3 \
@@ -92,10 +145,8 @@ sudo apt install -y build-essential cmake pkgconf python3 \
     git automake libtool
 ```
 
-### 3.2 Clone and Build
-
+**Step 2: Clone and build**
 ```bash
-# Clone repository
 cd ~
 git clone https://github.com/Pavelevich/fullchain.git
 cd fullchain/tetsuo-core
@@ -103,11 +154,15 @@ cd fullchain/tetsuo-core
 # Build (use -j2 if low on RAM)
 cmake -B build -DENABLE_IPC=OFF -DWITH_ZMQ=OFF
 cmake --build build -j$(nproc)
+```
 
-# Verify binaries
-ls -la build/bin/
+**Step 3: Verify binaries**
+```bash
+ls -la ~/fullchain/tetsuo-core/build/bin/
 # Should show: tetsuod, tetsuo-cli, tetsuo-qt (optional)
 ```
+
+> **Note:** If using Method 2, your binaries are in `~/fullchain/tetsuo-core/build/bin/` instead of `~/tetsuo-fullchain/tetsuo-core/build/bin/`. Adjust paths in subsequent commands accordingly.
 
 ### 3.3 Configure Node
 

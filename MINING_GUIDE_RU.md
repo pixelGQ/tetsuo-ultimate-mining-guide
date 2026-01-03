@@ -53,6 +53,30 @@ TETSUO — это блокчейн на базе SHA-256, форк Bitcoin, оп
 - **ckpool**: Stratum-сервер, переводящий протокол пула в RPC-вызовы
 - **Нода TETSUO**: Полная нода блокчейна для валидации и отправки блоков
 
+### Что нужно скачать
+
+| Компонент | Репозиторий | Назначение |
+|-----------|-------------|------------|
+| **Нода TETSUO** | [github.com/Pavelevich/tetsuonode](https://github.com/Pavelevich/tetsuonode) | Нода со скриптами установки |
+| **TETSUO Core** (запасной) | [github.com/Pavelevich/fullchain](https://github.com/Pavelevich/fullchain) | Исходный код, если скрипты не сработали |
+| **ckpool** | [bitbucket.org/ckolivas/ckpool](https://bitbucket.org/ckolivas/ckpool) | Stratum-сервер для майнинга |
+| **GPU Miner** (опционально) | [github.com/7etsuo/tetsuo-gpu-miner](https://github.com/7etsuo/tetsuo-gpu-miner) | CUDA-майнер для NVIDIA GPU |
+
+**После установки у вас будут:**
+
+| Бинарник | Расположение | Назначение |
+|----------|--------------|------------|
+| `tetsuod` | `~/tetsuo-fullchain/tetsuo-core/build/bin/` | Демон ноды |
+| `tetsuo-cli` | `~/tetsuo-fullchain/tetsuo-core/build/bin/` | Кошелёк и RPC-команды |
+| `ckpool` | `~/ckpool/src/` | Stratum-сервер |
+
+**Конфигурационные файлы:**
+
+| Файл | Назначение |
+|------|------------|
+| `~/.tetsuo/tetsuo.conf` | Настройки ноды (RPC, порты) |
+| `~/ckpool/tetsuo.conf` | Настройки пула (кошелёк, сложность) |
+
 ---
 
 ## 2. Требования
@@ -83,8 +107,37 @@ TETSUO — это блокчейн на базе SHA-256, форк Bitcoin, оп
 
 ## 3. Установка ноды TETSUO
 
-### 3.1 Установка зависимостей
+Выберите один из двух способов:
 
+### Способ 1: Автоматическая установка (рекомендуется)
+
+Используйте официальный скрипт из [tetsuonode](https://github.com/Pavelevich/tetsuonode):
+
+```bash
+# Установка одной командой
+curl -fsSL https://raw.githubusercontent.com/Pavelevich/tetsuonode/main/scripts/install-linux.sh | bash
+```
+
+Скрипт автоматически:
+- Установит все зависимости
+- Склонирует и соберёт TETSUO Core
+- Настроит директорию данных
+
+**После завершения проверьте:**
+```bash
+ls ~/tetsuo-fullchain/tetsuo-core/build/bin/
+# Должны быть: tetsuod, tetsuo-cli
+```
+
+> **Известная проблема:** У некоторых пользователей после выполнения скрипта отсутствует директория `tetsuo-core`. Если вы не видите бинарники выше, используйте Способ 2.
+
+---
+
+### Способ 2: Ручная установка (запасной вариант)
+
+Если автоматический скрипт не сработал, установите вручную:
+
+**Шаг 1: Установка зависимостей**
 ```bash
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y build-essential cmake pkgconf python3 \
@@ -92,10 +145,8 @@ sudo apt install -y build-essential cmake pkgconf python3 \
     git automake libtool
 ```
 
-### 3.2 Клонирование и сборка
-
+**Шаг 2: Клонирование и сборка**
 ```bash
-# Клонируем репозиторий
 cd ~
 git clone https://github.com/Pavelevich/fullchain.git
 cd fullchain/tetsuo-core
@@ -103,11 +154,15 @@ cd fullchain/tetsuo-core
 # Сборка (используйте -j2 если мало RAM)
 cmake -B build -DENABLE_IPC=OFF -DWITH_ZMQ=OFF
 cmake --build build -j$(nproc)
+```
 
-# Проверка бинарников
-ls -la build/bin/
+**Шаг 3: Проверка бинарников**
+```bash
+ls -la ~/fullchain/tetsuo-core/build/bin/
 # Должны быть: tetsuod, tetsuo-cli, tetsuo-qt (опционально)
 ```
+
+> **Примечание:** При использовании Способа 2 бинарники находятся в `~/fullchain/tetsuo-core/build/bin/` вместо `~/tetsuo-fullchain/tetsuo-core/build/bin/`. Учитывайте это в последующих командах.
 
 ### 3.3 Настройка ноды
 
