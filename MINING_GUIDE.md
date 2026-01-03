@@ -562,26 +562,21 @@ rpcallowip=127.0.0.1
 1. Register at miningrigrentals.com
 2. Deposit funds (BTC, LTC, or other)
 
-### 8.2 Add Your Pool
-
-1. Go to **My Pools** → **Add Pool**
-2. Configure:
-   - **Name**: TETSUO Solo
-   - **Type**: SHA256
-   - **Host**: `YOUR_PUBLIC_IP` or `VPS_IP`
-   - **Port**: `3333`
-   - **Username**: Your TETSUO address
-   - **Password**: `x`
-
-3. Test pool connectivity
-
-### 8.3 Rent a Rig
+### 8.2 Rent a Rig
 
 1. Go to **Rigs** → **SHA256**
 2. Filter by hashrate and price
 3. Check the rig's **Optimal Difficulty** range
+4. Click **Rent** and configure your pool:
+   - **Pool Host**: `YOUR_PUBLIC_IP` or `VPS_IP`
+   - **Pool Port**: `3333`
+   - **Username**: Your TETSUO address (e.g., `TApuot7dtebq7stqSrE3mo84ymKbgcC17s`)
+   - **Password**: `x`
+   - **Pool Type**: SHA256
 
-**CRITICAL: Difficulty Compatibility**
+### 8.3 Difficulty Compatibility
+
+**CRITICAL: Check Before Renting!**
 
 Each rig has an "Optimal Difficulty" range (e.g., "43k - 258k").
 
